@@ -46,11 +46,33 @@ export default function BeniuApp() {
   const [inventario, setInventario] = useState(inventarioIniziale);
   const [operadores] = useState(operadoresIniciales);
   const [movimientos, setMovimientos] = useState([]);
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState([
+    // Reports di esempio
+    { id: 1, operador: 'Patrik', fecha: '2026-01-27', horaInicio: '07:30', horaFin: '15:00', tipoJornada: 'campo', cliente: 'Cooperativa Agrícola Valencia', ubicacion: 'Parcela 12, Alzira', drone: 'T50', hectareas: '45', kilometraje: '120', productoAplicado: 'Fungicida cúprico', incidencias: '', anotaciones: 'Buen rendimiento, clima favorable' },
+    { id: 2, operador: 'Nico', fecha: '2026-01-27', horaInicio: '08:00', horaFin: '14:30', tipoJornada: 'campo', cliente: 'Finca Los Naranjos', ubicacion: 'Carcaixent', drone: 'T25', hectareas: '28', kilometraje: '85', productoAplicado: 'Tratamiento fitosanitario', incidencias: 'Viento fuerte a partir de las 12:00', anotaciones: 'Se tuvo que parar 30min por el viento' },
+    { id: 3, operador: 'David', fecha: '2026-01-27', horaInicio: '09:00', horaFin: '17:00', tipoJornada: 'oficina', tarea1: 'Revisión documentación AESA', tarea2: 'Presupuesto cliente nuevo', tarea3: 'Planificación rutas semana', tarea4: '' },
+    { id: 4, operador: 'Sara', fecha: '2026-01-27', horaInicio: '09:00', horaFin: '14:00', tipoJornada: 'oficina', tarea1: 'Facturación enero', tarea2: 'Llamadas clientes', tarea3: '', tarea4: '' },
+    { id: 5, operador: 'Patrik', fecha: '2026-01-26', horaInicio: '06:00', horaFin: '14:00', tipoJornada: 'campo', cliente: 'Bodega San Vicente', ubicacion: 'Requena', drone: 'T50', hectareas: '62', kilometraje: '150', productoAplicado: 'Azufre micronizado', incidencias: '', anotaciones: 'Viñedos en excelente estado' },
+    { id: 6, operador: 'Nico', fecha: '2026-01-26', horaInicio: '07:00', horaFin: '12:00', tipoJornada: 'campo', cliente: 'Huertos del Júcar', ubicacion: 'Sueca', drone: 'T25', hectareas: '18', kilometraje: '60', productoAplicado: 'Biocontrol Trichogramma', incidencias: 'Batería #3 con warning', anotaciones: 'Revisar batería en taller' },
+    { id: 7, operador: 'David', fecha: '2026-01-26', horaInicio: '08:00', horaFin: '18:00', tipoJornada: 'travel', observaciones: 'Viaje a Madrid - reunión con proveedor DJI' },
+    { id: 8, operador: 'Patrik', fecha: '2026-01-25', horaInicio: '07:00', horaFin: '16:00', tipoJornada: 'campo', cliente: 'Agrolevante S.L.', ubicacion: 'Gandía', drone: 'T50', hectareas: '55', kilometraje: '90', productoAplicado: 'Herbicida selectivo', incidencias: '', anotaciones: '' },
+    { id: 9, operador: 'Nico', fecha: '2026-01-25', horaInicio: '09:00', horaFin: '14:00', tipoJornada: 'oficina', tarea1: 'Mantenimiento drone T10', tarea2: 'Calibración sensores', tarea3: 'Actualización firmware', tarea4: 'Limpieza boquillas T25' },
+    { id: 10, operador: 'David', fecha: '2026-01-25', horaInicio: '08:00', horaFin: '15:00', tipoJornada: 'campo', cliente: 'Citrus Export', ubicacion: 'Oliva', drone: 'T25', hectareas: '32', kilometraje: '75', productoAplicado: 'Abono foliar', incidencias: '', anotaciones: 'Cliente muy satisfecho' },
+    { id: 11, operador: 'Patrik', fecha: '2026-01-24', horaInicio: '06:30', horaFin: '15:30', tipoJornada: 'campo', cliente: 'Cooperativa Agrícola Valencia', ubicacion: 'Parcela 8, Alzira', drone: 'T50', hectareas: '48', kilometraje: '125', productoAplicado: 'Insecticida biológico', incidencias: 'Rotura boquilla #2', anotaciones: 'Cambiar boquilla antes del próximo vuelo' },
+    { id: 12, operador: 'Nico', fecha: '2026-01-24', horaInicio: '07:00', horaFin: '13:00', tipoJornada: 'campo', cliente: 'Finca El Paraíso', ubicacion: 'Xàtiva', drone: 'T10', hectareas: '12', kilometraje: '45', productoAplicado: 'Tratamiento preventivo', incidencias: '', anotaciones: '' },
+    { id: 13, operador: 'David', fecha: '2026-01-24', horaInicio: '09:00', horaFin: '18:00', tipoJornada: 'oficina', tarea1: 'Reunión equipo semanal', tarea2: 'Revisión KPIs enero', tarea3: 'Entrevista piloto nuevo', tarea4: 'Presupuestos pendientes' },
+    { id: 14, operador: 'Sara', fecha: '2026-01-24', horaInicio: '09:00', horaFin: '14:00', tipoJornada: 'oficina', tarea1: 'Gestión cobros pendientes', tarea2: 'Actualización base de datos clientes', tarea3: '', tarea4: '' },
+    { id: 15, operador: 'Patrik', fecha: '2026-01-23', horaInicio: '08:00', horaFin: '18:00', tipoJornada: 'travel', observaciones: 'Desplazamiento a Murcia - trabajo 2 días' },
+  ]);
   const [documentos, setDocumentos] = useState([
     { id: 1, nombre: 'Autorización AESA - Categoría Específica', categoria: 'Autorizaciones', url: '', descripcion: 'ESP-OAT-00178/001 - Válida hasta 22/10/2026 - T10, T25, T50', fechaSubida: '2025-10-29', subidoPor: 'Nico' },
-    { id: 2, nombre: 'Checklist Pre-Vuelo', categoria: 'Procedimientos', url: '', descripcion: 'Lista de verificación antes de cada vuelo', fechaSubida: '2024-01-10', subidoPor: 'Nico' },
-    { id: 3, nombre: 'Protocolo Seguridad', categoria: 'Seguridad', url: '', descripcion: 'Normas de seguridad en campo', fechaSubida: '2024-01-05', subidoPor: 'Nico' },
+    { id: 2, nombre: 'Manual DJI Agras T10', categoria: 'Manuales', url: 'https://www.dji.com/agras-t10/downloads', descripcion: 'Manual de usuario oficial T10', fechaSubida: '2024-01-15', subidoPor: 'Nico' },
+    { id: 3, nombre: 'Manual DJI Agras T25', categoria: 'Manuales', url: 'https://www.dji.com/agras-t25/downloads', descripcion: 'Manual de usuario oficial T25', fechaSubida: '2024-01-15', subidoPor: 'Nico' },
+    { id: 4, nombre: 'Manual DJI Agras T50', categoria: 'Manuales', url: 'https://www.dji.com/agras-t50/downloads', descripcion: 'Manual de usuario oficial T50', fechaSubida: '2024-01-15', subidoPor: 'Nico' },
+    { id: 5, nombre: 'Manual DJI Relay', categoria: 'Manuales', url: 'https://www.dji.com/dji-relay/downloads', descripcion: 'Manual de usuario antena Relay', fechaSubida: '2024-01-15', subidoPor: 'Nico' },
+    { id: 6, nombre: 'Manual D-RTK 2', categoria: 'Manuales', url: 'https://www.dji.com/d-rtk-2/downloads', descripcion: 'Manual de usuario D-RTK 2', fechaSubida: '2024-01-15', subidoPor: 'Nico' },
+    { id: 7, nombre: 'Checklist Pre-Vuelo', categoria: 'Procedimientos', url: '', descripcion: 'Lista de verificación antes de cada vuelo', fechaSubida: '2024-01-10', subidoPor: 'Nico' },
+    { id: 8, nombre: 'Protocolo Seguridad', categoria: 'Seguridad', url: '', descripcion: 'Normas de seguridad en campo', fechaSubida: '2024-01-05', subidoPor: 'Nico' },
   ]);
   const [itemsSeleccionados, setItemsSeleccionados] = useState([]);
   const [reportForm, setReportForm] = useState({
@@ -562,7 +584,7 @@ export default function BeniuApp() {
                 Estado Pilotos
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem' }}>
-                {operadores.filter(o => o.rol === 'Piloto').map(op => {
+                {operadores.filter(o => o.nombre !== 'Sara').map(op => {
                   const itemsOp = inventario.filter(i => i.asignado === op.nombre);
                   return (
                     <div key={op.id} style={{
