@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 const inventarioIniziale = [
   { id: 1, categoria: 'Drones', nombre: 'DJI Agras T50', cantidad: 1, estado: 'operativo', ubicacion: 'Almacén BOLBAITE', asignado: null },
   { id: 2, categoria: 'Drones', nombre: 'DJI Agras T25 #1', cantidad: 1, estado: 'operativo', ubicacion: 'Almacén BOLBAITE', asignado: null },
-  { id: 3, categoria: 'Drones', nombre: 'DJI Agras T25 #2', cantidad: 1, estado: '1 boquilla dañada', ubicacion: 'Patric', asignado: 'Patric' },
+  { id: 3, categoria: 'Drones', nombre: 'DJI Agras T25 #2', cantidad: 1, estado: '1 boquilla dañada', ubicacion: 'Patrik', asignado: 'Patrik' },
   { id: 4, categoria: 'Drones', nombre: 'DJI Agras T10', cantidad: 1, estado: 'en reparacion', ubicacion: 'Almacén BOLBAITE', asignado: null },
-  { id: 5, categoria: 'Drones', nombre: 'DJI Avatar', cantidad: 1, estado: 'operativo', ubicacion: 'Patric', asignado: 'Patric' },
+  { id: 5, categoria: 'Drones', nombre: 'DJI Avatar', cantidad: 1, estado: 'operativo', ubicacion: 'Patrik', asignado: 'Patrik' },
   { id: 6, categoria: 'Drones', nombre: 'DJI AIR 3', cantidad: 1, estado: 'operativo', ubicacion: 'Almacén BOLBAITE', asignado: null },
   { id: 7, categoria: 'Baterías', nombre: 'Batería DJI T10', cantidad: 5, estado: 'operativo', ubicacion: 'Almacén BOLBAITE', asignado: null },
   { id: 8, categoria: 'Baterías', nombre: 'Batería DJI T25', cantidad: 5, estado: 'Batería #2 con fallo', ubicacion: 'Almacén BOLBAITE', asignado: null },
@@ -30,20 +30,28 @@ const inventarioIniziale = [
 ];
 
 const operadoresIniciales = [
-  { id: 1, nombre: 'Patric', rol: 'Piloto', avatar: 'P' },
-  { id: 2, nombre: 'Nico', rol: 'Piloto', avatar: 'N' },
-  { id: 3, nombre: 'David', rol: 'Piloto', avatar: 'D' },
-  { id: 4, nombre: 'Sara', rol: 'Secretaria', avatar: 'S' },
+  { id: 1, nombre: 'Patrik', rol: 'empleado', avatar: 'P', password: '1' },
+  { id: 2, nombre: 'Nico', rol: 'admin', avatar: 'N', password: '2' },
+  { id: 3, nombre: 'David', rol: 'admin', avatar: 'D', password: '3' },
+  { id: 4, nombre: 'Sara', rol: 'empleado', avatar: 'S', password: '4' },
 ];
 
 // Componente principale
 export default function BeniuApp() {
   const [pagina, setPagina] = useState('dashboard');
   const [usuarioActual, setUsuarioActual] = useState(null);
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [errorPassword, setErrorPassword] = useState(false);
   const [inventario, setInventario] = useState(inventarioIniziale);
   const [operadores] = useState(operadoresIniciales);
   const [movimientos, setMovimientos] = useState([]);
   const [reports, setReports] = useState([]);
+  const [documentos, setDocumentos] = useState([
+    { id: 1, nombre: 'Autorización AESA - Categoría Específica', categoria: 'Autorizaciones', url: '', descripcion: 'ESP-OAT-00178/001 - Válida hasta 22/10/2026 - T10, T25, T50', fechaSubida: '2025-10-29', subidoPor: 'Nico' },
+    { id: 2, nombre: 'Checklist Pre-Vuelo', categoria: 'Procedimientos', url: '', descripcion: 'Lista de verificación antes de cada vuelo', fechaSubida: '2024-01-10', subidoPor: 'Nico' },
+    { id: 3, nombre: 'Protocolo Seguridad', categoria: 'Seguridad', url: '', descripcion: 'Normas de seguridad en campo', fechaSubida: '2024-01-05', subidoPor: 'Nico' },
+  ]);
   const [itemsSeleccionados, setItemsSeleccionados] = useState([]);
   const [reportForm, setReportForm] = useState({
     fecha: new Date().toISOString().split('T')[0],
@@ -95,45 +103,146 @@ export default function BeniuApp() {
           </div>
           <p style={{ color: '#81C784', marginBottom: '1.5rem' }}>Sistema de Gestión de Equipos</p>
           
-          <p style={{ color: '#a5d6a7', marginBottom: '1rem', fontSize: '0.9rem' }}>Selecciona tu usuario:</p>
-          
-          <div style={{ display: 'grid', gap: '0.75rem' }}>
-            {operadores.map(op => (
-              <div
-                key={op.id}
-                onClick={() => setUsuarioActual(op)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  padding: '1rem',
-                  background: 'rgba(76, 175, 80, 0.1)',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  border: '2px solid transparent',
-                  transition: 'all 0.2s'
-                }}
-              >
+          {!usuarioSeleccionado ? (
+            <>
+              <p style={{ color: '#a5d6a7', marginBottom: '1rem', fontSize: '0.9rem' }}>Selecciona tu usuario:</p>
+              <div style={{ display: 'grid', gap: '0.75rem' }}>
+                {operadores.map(op => (
+                  <div
+                    key={op.id}
+                    onClick={() => { setUsuarioSeleccionado(op); setErrorPassword(false); setPasswordInput(''); }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      padding: '1rem',
+                      background: 'rgba(76, 175, 80, 0.1)',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      border: '2px solid transparent',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      background: '#2E7D32',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '1.2rem'
+                    }}>
+                      {op.avatar}
+                    </div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontWeight: 600, fontSize: '1.1rem' }}>{op.nombre}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ marginBottom: '1.5rem' }}>
                 <div style={{
-                  width: '40px',
-                  height: '40px',
+                  width: '60px',
+                  height: '60px',
                   borderRadius: '50%',
                   background: '#2E7D32',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 700,
-                  fontSize: '1.2rem'
+                  fontSize: '1.5rem',
+                  margin: '0 auto 0.75rem'
                 }}>
-                  {op.avatar}
+                  {usuarioSeleccionado.avatar}
                 </div>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{ fontWeight: 600, fontSize: '1.1rem' }}>{op.nombre}</div>
-                  <div style={{ color: '#81C784', fontSize: '0.85rem' }}>{op.rol}</div>
-                </div>
+                <div style={{ fontWeight: 600, fontSize: '1.2rem' }}>{usuarioSeleccionado.nombre}</div>
               </div>
-            ))}
-          </div>
+              
+              <div style={{ marginBottom: '1rem' }}>
+                <input
+                  type="password"
+                  placeholder="Contraseña"
+                  value={passwordInput}
+                  onChange={(e) => { setPasswordInput(e.target.value); setErrorPassword(false); }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      if (passwordInput === usuarioSeleccionado.password) {
+                        setUsuarioActual(usuarioSeleccionado);
+                        setUsuarioSeleccionado(null);
+                        setPasswordInput('');
+                      } else {
+                        setErrorPassword(true);
+                      }
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1rem',
+                    background: 'rgba(0,0,0,0.3)',
+                    border: errorPassword ? '1px solid #ef5350' : '1px solid rgba(76, 175, 80, 0.3)',
+                    borderRadius: '8px',
+                    color: '#e8f5e9',
+                    fontSize: '1rem',
+                    textAlign: 'center',
+                    boxSizing: 'border-box'
+                  }}
+                  autoFocus
+                />
+                {errorPassword && (
+                  <div style={{ color: '#ef5350', fontSize: '0.8rem', marginTop: '0.5rem' }}>
+                    Contraseña incorrecta
+                  </div>
+                )}
+              </div>
+              
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  onClick={() => { setUsuarioSeleccionado(null); setPasswordInput(''); setErrorPassword(false); }}
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    background: 'transparent',
+                    border: '1px solid rgba(76, 175, 80, 0.3)',
+                    borderRadius: '8px',
+                    color: '#a5d6a7',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  Volver
+                </button>
+                <button
+                  onClick={() => {
+                    if (passwordInput === usuarioSeleccionado.password) {
+                      setUsuarioActual(usuarioSeleccionado);
+                      setUsuarioSeleccionado(null);
+                      setPasswordInput('');
+                    } else {
+                      setErrorPassword(true);
+                    }
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    background: '#2E7D32',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: 600
+                  }}
+                >
+                  Entrar
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );
@@ -291,7 +400,7 @@ export default function BeniuApp() {
         <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#4CAF50' }}>BENIU</div>
         
         <nav style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-          {['dashboard', 'inventario', 'checkout', 'reports'].map(p => (
+          {['dashboard', 'inventario', 'checkout', 'reports', 'documentos'].map(p => (
             <button
               key={p}
               onClick={() => { setPagina(p); setItemsSeleccionados([]); }}
@@ -350,6 +459,7 @@ export default function BeniuApp() {
           {pagina === 'inventario' && 'Inventario'}
           {pagina === 'checkout' && 'Entrada / Salida'}
           {pagina === 'reports' && 'Reports'}
+          {pagina === 'documentos' && 'Documentos Compartidos'}
         </h1>
 
         {/* Dashboard */}
@@ -778,68 +888,335 @@ export default function BeniuApp() {
               </form>
             </div>
 
-            {/* Lista */}
+            {/* Lista - Solo visible para admin */}
+            {usuarioActual.rol === 'admin' ? (
+              <div style={cardStyle}>
+                <div style={{ fontSize: '1rem', fontWeight: 600, color: '#81C784', marginBottom: '1rem' }}>
+                  Todos los Reports (Solo Admin)
+                </div>
+                
+                {/* Mini estadísticas */}
+                {reports.length > 0 && (
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', 
+                    gap: '0.5rem', 
+                    marginBottom: '1rem',
+                    padding: '0.75rem',
+                    background: 'rgba(0,0,0,0.2)',
+                    borderRadius: '8px'
+                  }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#FFB74D' }}>
+                        {reports.filter(r => r.tipoJornada === 'campo').length}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: '#a5d6a7' }}>Campo</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#64B5F6' }}>
+                        {reports.filter(r => r.tipoJornada === 'oficina').length}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: '#a5d6a7' }}>Oficina</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#BA68C8' }}>
+                        {reports.filter(r => r.tipoJornada === 'travel').length}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: '#a5d6a7' }}>Travel</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#4CAF50' }}>
+                        {reports.reduce((acc, r) => acc + (parseFloat(r.hectareas) || 0), 0).toFixed(1)}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: '#a5d6a7' }}>Ha totales</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Gráfico por operador */}
+                {reports.length > 0 && (
+                  <div style={{ marginBottom: '1rem' }}>
+                    <div style={{ fontSize: '0.8rem', color: '#a5d6a7', marginBottom: '0.5rem' }}>Reports por operador:</div>
+                    {operadores.map(op => {
+                      const reportsOp = reports.filter(r => r.operador === op.nombre).length;
+                      const maxReports = Math.max(...operadores.map(o => reports.filter(r => r.operador === o.nombre).length), 1);
+                      const percentage = (reportsOp / maxReports) * 100;
+                      return (
+                        <div key={op.id} style={{ marginBottom: '0.4rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.2rem' }}>
+                            <span>{op.nombre}</span>
+                            <span style={{ color: '#81C784' }}>{reportsOp}</span>
+                          </div>
+                          <div style={{ 
+                            height: '8px', 
+                            background: 'rgba(0,0,0,0.3)', 
+                            borderRadius: '4px',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{ 
+                              height: '100%', 
+                              width: `${percentage}%`, 
+                              background: 'linear-gradient(90deg, #2E7D32, #4CAF50)',
+                              borderRadius: '4px',
+                              transition: 'width 0.3s'
+                            }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {reports.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '2rem', color: '#81C784', opacity: 0.7 }}>Ningún report</div>
+                ) : (
+                  <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '400px', overflowY: 'auto' }}>
+                    {reports.map(rep => (
+                      <div key={rep.id} style={{
+                        padding: '0.75rem',
+                        background: 'rgba(0,0,0,0.2)',
+                        borderRadius: '8px',
+                        borderLeft: `3px solid ${rep.tipoJornada === 'campo' ? '#FFB74D' : rep.tipoJornada === 'oficina' ? '#64B5F6' : '#BA68C8'}`,
+                        fontSize: '0.8rem'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                          <span style={{ 
+                            padding: '0.15rem 0.5rem', 
+                            borderRadius: '10px', 
+                            fontSize: '0.7rem',
+                            fontWeight: 600,
+                            background: rep.tipoJornada === 'campo' ? 'rgba(255, 183, 77, 0.2)' : rep.tipoJornada === 'oficina' ? 'rgba(100, 181, 246, 0.2)' : 'rgba(186, 104, 200, 0.2)',
+                            color: rep.tipoJornada === 'campo' ? '#FFB74D' : rep.tipoJornada === 'oficina' ? '#64B5F6' : '#BA68C8'
+                          }}>
+                            {rep.tipoJornada === 'campo' ? 'CAMPO' : rep.tipoJornada === 'oficina' ? 'OFICINA' : 'TRAVEL'}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#81C784' }}>{rep.fecha}</span>
+                        </div>
+                        
+                        <div style={{ color: '#e8f5e9', marginBottom: '0.3rem' }}>
+                          {rep.horaInicio} - {rep.horaFin}
+                        </div>
+                        
+                        <div style={{ color: '#a5d6a7' }}>
+                          {rep.tipoJornada === 'campo' && (
+                            <>
+                              <div style={{ fontWeight: 600 }}>{rep.cliente}</div>
+                              <div>{rep.ubicacion}</div>
+                              <div>{rep.drone} {rep.hectareas && `• ${rep.hectareas}ha`} {rep.kilometraje && `• ${rep.kilometraje}km`}</div>
+                              {rep.productoAplicado && <div>Productos: {rep.productoAplicado}</div>}
+                              {rep.incidencias && <div style={{ color: '#ef5350' }}>⚠️ {rep.incidencias}</div>}
+                              {rep.anotaciones && <div style={{ fontStyle: 'italic', marginTop: '0.2rem' }}>📝 {rep.anotaciones}</div>}
+                            </>
+                          )}
+                          {rep.tipoJornada === 'oficina' && (
+                            <div>
+                              <div>• {rep.tarea1}</div>
+                              {rep.tarea2 && <div>• {rep.tarea2}</div>}
+                              {rep.tarea3 && <div>• {rep.tarea3}</div>}
+                              {rep.tarea4 && <div>• {rep.tarea4}</div>}
+                            </div>
+                          )}
+                          {rep.tipoJornada === 'travel' && (
+                            <div>Día de desplazamiento</div>
+                          )}
+                          {rep.observaciones && <div style={{ fontStyle: 'italic', marginTop: '0.3rem', borderTop: '1px solid rgba(76, 175, 80, 0.1)', paddingTop: '0.3rem' }}>"{rep.observaciones}"</div>}
+                        </div>
+                        <div style={{ marginTop: '0.3rem', fontSize: '0.65rem', color: '#666' }}>Por {rep.operador}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={cardStyle}>
+                <div style={{ fontSize: '1rem', fontWeight: 600, color: '#81C784', marginBottom: '1rem' }}>
+                  Mis Reports
+                </div>
+                {reports.filter(r => r.operador === usuarioActual.nombre).length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '2rem', color: '#81C784', opacity: 0.7 }}>No has enviado reports aún</div>
+                ) : (
+                  <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '500px', overflowY: 'auto' }}>
+                    {reports.filter(r => r.operador === usuarioActual.nombre).map(rep => (
+                      <div key={rep.id} style={{
+                        padding: '0.75rem',
+                        background: 'rgba(0,0,0,0.2)',
+                        borderRadius: '8px',
+                        borderLeft: `3px solid ${rep.tipoJornada === 'campo' ? '#FFB74D' : rep.tipoJornada === 'oficina' ? '#64B5F6' : '#BA68C8'}`,
+                        fontSize: '0.8rem'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                          <span style={{ 
+                            padding: '0.15rem 0.5rem', 
+                            borderRadius: '10px', 
+                            fontSize: '0.7rem',
+                            fontWeight: 600,
+                            background: rep.tipoJornada === 'campo' ? 'rgba(255, 183, 77, 0.2)' : rep.tipoJornada === 'oficina' ? 'rgba(100, 181, 246, 0.2)' : 'rgba(186, 104, 200, 0.2)',
+                            color: rep.tipoJornada === 'campo' ? '#FFB74D' : rep.tipoJornada === 'oficina' ? '#64B5F6' : '#BA68C8'
+                          }}>
+                            {rep.tipoJornada === 'campo' ? 'CAMPO' : rep.tipoJornada === 'oficina' ? 'OFICINA' : 'TRAVEL'}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#81C784' }}>{rep.fecha}</span>
+                        </div>
+                        <div style={{ color: '#e8f5e9' }}>{rep.horaInicio} - {rep.horaFin}</div>
+                        {rep.tipoJornada === 'campo' && <div style={{ color: '#a5d6a7', fontSize: '0.75rem' }}>{rep.cliente} • {rep.ubicacion}</div>}
+                        {rep.tipoJornada === 'oficina' && <div style={{ color: '#a5d6a7', fontSize: '0.75rem' }}>{rep.tarea1}</div>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Documentos */}
+        {pagina === 'documentos' && (
+          <div>
+            {/* Upload nuovo documento */}
             <div style={cardStyle}>
               <div style={{ fontSize: '1rem', fontWeight: 600, color: '#81C784', marginBottom: '1rem' }}>
-                Reports Anteriores
+                Subir Nuevo Documento
               </div>
-              {reports.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '2rem', color: '#81C784', opacity: 0.7 }}>Ningún report</div>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const form = e.target;
+                const nuovoDoc = {
+                  id: Date.now(),
+                  nombre: form.nombre.value,
+                  categoria: form.categoria.value,
+                  url: form.url.value,
+                  descripcion: form.descripcion.value,
+                  fechaSubida: new Date().toISOString().split('T')[0],
+                  subidoPor: usuarioActual.nombre,
+                };
+                setDocumentos([nuovoDoc, ...documentos]);
+                form.reset();
+                alert('Documento añadido!');
+              }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.6rem' }}>
+                  <div style={{ marginBottom: '0.6rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.25rem', color: '#a5d6a7', fontSize: '0.75rem' }}>Nombre del documento *</label>
+                    <input type="text" name="nombre" style={inputStyle} placeholder="Ej: Manual T50" required />
+                  </div>
+                  <div style={{ marginBottom: '0.6rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.25rem', color: '#a5d6a7', fontSize: '0.75rem' }}>Categoría *</label>
+                    <select name="categoria" style={inputStyle} required>
+                      <option value="">Seleccionar...</option>
+                      <option value="Manuales">Manuales</option>
+                      <option value="Autorizaciones">Autorizaciones</option>
+                      <option value="Procedimientos">Procedimientos</option>
+                      <option value="Seguridad">Seguridad</option>
+                      <option value="Clientes">Clientes</option>
+                      <option value="Formación">Formación</option>
+                      <option value="Administrativo">Administrativo</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                  </div>
+                </div>
+                <div style={{ marginBottom: '0.6rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.25rem', color: '#a5d6a7', fontSize: '0.75rem' }}>URL del documento (Google Drive, Dropbox, etc.)</label>
+                  <input type="url" name="url" style={inputStyle} placeholder="https://drive.google.com/..." />
+                </div>
+                <div style={{ marginBottom: '0.6rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.25rem', color: '#a5d6a7', fontSize: '0.75rem' }}>Descripción</label>
+                  <input type="text" name="descripcion" style={inputStyle} placeholder="Breve descripción del contenido" />
+                </div>
+                <button type="submit" style={{ ...buttonStyle, marginTop: '0.5rem' }}>
+                  + Añadir Documento
+                </button>
+              </form>
+            </div>
+
+            {/* Lista de documentos por categoría */}
+            <div style={cardStyle}>
+              <div style={{ fontSize: '1rem', fontWeight: 600, color: '#81C784', marginBottom: '1rem' }}>
+                Biblioteca de Documentos
+              </div>
+              {documentos.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#81C784', opacity: 0.7 }}>No hay documentos</div>
               ) : (
-                <div style={{ display: 'grid', gap: '0.75rem', maxHeight: '500px', overflowY: 'auto' }}>
-                  {reports.map(rep => (
-                    <div key={rep.id} style={{
-                      padding: '0.75rem',
-                      background: 'rgba(0,0,0,0.2)',
-                      borderRadius: '8px',
-                      borderLeft: `3px solid ${rep.tipoJornada === 'campo' ? '#FFB74D' : rep.tipoJornada === 'oficina' ? '#64B5F6' : '#BA68C8'}`,
-                      fontSize: '0.8rem'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                        <span style={{ 
-                          padding: '0.15rem 0.5rem', 
-                          borderRadius: '10px', 
-                          fontSize: '0.7rem',
-                          fontWeight: 600,
-                          background: rep.tipoJornada === 'campo' ? 'rgba(255, 183, 77, 0.2)' : rep.tipoJornada === 'oficina' ? 'rgba(100, 181, 246, 0.2)' : 'rgba(186, 104, 200, 0.2)',
-                          color: rep.tipoJornada === 'campo' ? '#FFB74D' : rep.tipoJornada === 'oficina' ? '#64B5F6' : '#BA68C8'
+                <div>
+                  {['Manuales', 'Autorizaciones', 'Procedimientos', 'Seguridad', 'Clientes', 'Formación', 'Administrativo', 'Otro'].map(cat => {
+                    const docsCategoria = documentos.filter(d => d.categoria === cat);
+                    if (docsCategoria.length === 0) return null;
+                    return (
+                      <div key={cat} style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ 
+                          fontSize: '0.85rem', 
+                          fontWeight: 600, 
+                          color: '#FFB74D', 
+                          marginBottom: '0.5rem',
+                          padding: '0.3rem 0',
+                          borderBottom: '1px solid rgba(255, 183, 77, 0.2)'
                         }}>
-                          {rep.tipoJornada === 'campo' ? 'CAMPO' : rep.tipoJornada === 'oficina' ? 'OFICINA' : 'TRAVEL'}
-                        </span>
-                        <span style={{ fontSize: '0.7rem', color: '#81C784' }}>{rep.fecha}</span>
+                          {cat} ({docsCategoria.length})
+                        </div>
+                        <div style={{ display: 'grid', gap: '0.5rem' }}>
+                          {docsCategoria.map(doc => (
+                            <div key={doc.id} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              padding: '0.75rem',
+                              background: 'rgba(0,0,0,0.2)',
+                              borderRadius: '8px',
+                              gap: '1rem'
+                            }}>
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.2rem' }}>
+                                  {doc.nombre}
+                                </div>
+                                {doc.descripcion && (
+                                  <div style={{ fontSize: '0.8rem', color: '#a5d6a7' }}>{doc.descripcion}</div>
+                                )}
+                                <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '0.2rem' }}>
+                                  Subido por {doc.subidoPor} • {doc.fechaSubida}
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                {doc.url && (
+                                  <a 
+                                    href={doc.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      padding: '0.4rem 0.8rem',
+                                      background: '#2E7D32',
+                                      borderRadius: '6px',
+                                      color: '#fff',
+                                      textDecoration: 'none',
+                                      fontSize: '0.75rem',
+                                      fontWeight: 600
+                                    }}
+                                  >
+                                    Abrir
+                                  </a>
+                                )}
+                                <button
+                                  onClick={() => {
+                                    if (confirm('¿Eliminar este documento?')) {
+                                      setDocumentos(documentos.filter(d => d.id !== doc.id));
+                                    }
+                                  }}
+                                  style={{
+                                    padding: '0.4rem 0.8rem',
+                                    background: 'rgba(244, 67, 54, 0.2)',
+                                    border: '1px solid rgba(244, 67, 54, 0.3)',
+                                    borderRadius: '6px',
+                                    color: '#ef5350',
+                                    cursor: 'pointer',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  Eliminar
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      
-                      <div style={{ color: '#e8f5e9', marginBottom: '0.3rem' }}>
-                        {rep.horaInicio} - {rep.horaFin}
-                      </div>
-                      
-                      <div style={{ color: '#a5d6a7' }}>
-                        {rep.tipoJornada === 'campo' && (
-                          <>
-                            <div style={{ fontWeight: 600 }}>{rep.cliente}</div>
-                            <div>{rep.ubicacion}</div>
-                            <div>{rep.drone} {rep.hectareas && `• ${rep.hectareas}ha`} {rep.kilometraje && `• ${rep.kilometraje}km`}</div>
-                            {rep.productoAplicado && <div>Productos: {rep.productoAplicado}</div>}
-                            {rep.incidencias && <div style={{ color: '#ef5350' }}>⚠️ {rep.incidencias}</div>}
-                            {rep.anotaciones && <div style={{ fontStyle: 'italic', marginTop: '0.2rem' }}>📝 {rep.anotaciones}</div>}
-                          </>
-                        )}
-                        {rep.tipoJornada === 'oficina' && (
-                          <div>
-                            <div>• {rep.tarea1}</div>
-                            {rep.tarea2 && <div>• {rep.tarea2}</div>}
-                            {rep.tarea3 && <div>• {rep.tarea3}</div>}
-                            {rep.tarea4 && <div>• {rep.tarea4}</div>}
-                          </div>
-                        )}
-                        {rep.tipoJornada === 'travel' && (
-                          <div>Día de desplazamiento</div>
-                        )}
-                        {rep.observaciones && <div style={{ fontStyle: 'italic', marginTop: '0.3rem', borderTop: '1px solid rgba(76, 175, 80, 0.1)', paddingTop: '0.3rem' }}>"{rep.observaciones}"</div>}
-                      </div>
-                      <div style={{ marginTop: '0.3rem', fontSize: '0.65rem', color: '#666' }}>Por {rep.operador}</div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
