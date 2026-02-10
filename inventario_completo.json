@@ -1,0 +1,110 @@
+{
+  "inventory_metadata": {
+    "version": "1.0",
+    "last_updated": "2026-02-10",
+    "owner": "Nico - Drone Services Business",
+    "language": "es",
+    "notes": "Cada producto debe poder ser retirado por cantidad. Al retirar un equipo principal (ej: un drone), se debe registrar también la cantidad de accesorios asociados (baterías, hélices, depósitos, etc.)."
+  },
+  "categories": [
+    {
+      "category_id": "drones",
+      "category_name": "Drones y componentes",
+      "items": [
+        { "item_id": "drone_t10", "name": "DJI Agras T10", "type": "drone_agricola", "quantity": 2, "related_items": ["bat_t10", "charger_t10", "tank_t10_liquid", "tank_t10_solid", "helices_agras"] },
+        { "item_id": "drone_t25", "name": "DJI Agras T25", "type": "drone_agricola", "quantity": 1, "related_items": ["bat_t25", "charger_t25", "tank_t25_liquid"] },
+        { "item_id": "drone_t50", "name": "DJI Agras T50", "type": "drone_agricola", "quantity": 1, "related_items": ["bat_t50", "charger_t50", "tank_t50_liquid", "tank_t50_solid"] },
+        { "item_id": "drone_mavic3m", "name": "DJI Mavic 3M (Multispectral)", "type": "drone_mapeo", "quantity": 1, "related_items": ["bat_mavic3m", "helices_mavic"] },
+        { "item_id": "drone_air3", "name": "DJI Air 3", "type": "drone_recreativo", "quantity": 1, "related_items": ["bat_air3"] }
+      ]
+    },
+    {
+      "category_id": "baterias",
+      "category_name": "Baterías y cargadores",
+      "items": [
+        { "item_id": "bat_t50", "name": "Batería DB1560 DJI (para T50)", "quantity": 5 },
+        { "item_id": "bat_t10", "name": "Batería DJI (para T10)", "quantity": 8 },
+        { "item_id": "bat_t25", "name": "Batería DJI (para T25)", "quantity": 4 },
+        { "item_id": "bat_mavic3m", "name": "Batería DJI Mavic 3M", "quantity": 3 },
+        { "item_id": "bat_air3", "name": "Batería DJI Air 3", "quantity": 3 },
+        { "item_id": "bat_wb37", "name": "Batería Externa mando/RTK WB37", "quantity": 10 },
+        { "item_id": "charger_t50", "name": "Cargador de baterías DJI T50", "quantity": 1 },
+        { "item_id": "charger_t25", "name": "Cargador de baterías DJI T25", "quantity": 2 },
+        { "item_id": "charger_t10", "name": "Cargador de baterías DJI T10", "quantity": 2 },
+        { "item_id": "adapter_jack", "name": "Adaptador de corriente (jack redondo)", "quantity": 2 },
+        { "item_id": "adapter_usbc", "name": "Adaptador de corriente (USB-C)", "quantity": 3 },
+        { "item_id": "hub_jack", "name": "Hub de carga baterías externas (jack)", "quantity": 1 },
+        { "item_id": "hub_usbc", "name": "Hub de carga baterías externas (USB-C)", "quantity": 3 }
+      ]
+    },
+    {
+      "category_id": "depositos",
+      "category_name": "Depósitos/Tanques",
+      "items": [
+        { "item_id": "tank_t10_liquid", "name": "Depósito T10 para líquido", "quantity": 5 },
+        { "item_id": "tank_t10_solid", "name": "Depósito T10 para sólido/granulado", "quantity": 1 },
+        { "item_id": "tank_t25_liquid", "name": "Depósito T25 para líquido", "quantity": 1 },
+        { "item_id": "tank_t50_liquid", "name": "Depósito T50 para líquido", "quantity": 1 },
+        { "item_id": "tank_t50_solid", "name": "Depósito T50 para sólido/granulado", "quantity": 3 }
+      ]
+    },
+    {
+      "category_id": "rtk_navegacion",
+      "category_name": "RTK y navegación",
+      "items": [
+        { "item_id": "rtk_1", "name": "Antena RTK 1", "quantity": 1 },
+        { "item_id": "rtk_2", "name": "RTK 2", "quantity": 1 },
+        { "item_id": "rtk_3", "name": "RTK 3", "quantity": 1 },
+        { "item_id": "dji_relay", "name": "DJI Relay", "quantity": 1 },
+        { "item_id": "remote_id_swellpro", "name": "Remote ID Swellpro", "quantity": 2 }
+      ]
+    },
+    {
+      "category_id": "repuestos",
+      "category_name": "Repuestos y accesorios",
+      "items": [
+        { "item_id": "helices_agras", "name": "Hélices repuesto Agras (set 4)", "quantity": 10 },
+        { "item_id": "helices_mavic", "name": "Hélices repuesto Mavic (paq. 2)", "quantity": 2 },
+        { "item_id": "antenna_rcplus", "name": "Antena repuesto RC Plus", "quantity": 5 }
+      ]
+    },
+    {
+      "category_id": "pulverizacion",
+      "category_name": "Equipos de pulverización",
+      "items": [
+        { "item_id": "pulverizador_agromur", "name": "Pulverizador agrícola Agromur (300L)", "quantity": 1 },
+        { "item_id": "bomba_diesel", "name": "Bomba diésel DIESEL POWER 600", "quantity": 1 },
+        { "item_id": "bomba_sin_manguera", "name": "Bomba sin manguera", "quantity": 1 },
+        { "item_id": "dosificadores", "name": "Dosificadores/Medidores", "quantity": 4 },
+        { "item_id": "manguera_pistola", "name": "Manguera completa con pistola", "quantity": 1 }
+      ]
+    },
+    {
+      "category_id": "generadores",
+      "category_name": "Generadores",
+      "items": [
+        { "item_id": "gen_hyundai", "name": "Generador Hyundai HY10100LEK-T", "quantity": 1 },
+        { "item_id": "gen_genergy", "name": "Generador Genergy Limited 5000", "quantity": 1 },
+        { "item_id": "alargador_25m", "name": "Alargador con regleta 25m", "quantity": 1 }
+      ]
+    },
+    {
+      "category_id": "herramientas",
+      "category_name": "Herramientas",
+      "items": [
+        { "item_id": "llaves_workmann", "name": "Juego llaves de vaso Workmann 42pcs", "quantity": 1 },
+        { "item_id": "destornilladores_emitools", "name": "Kit destornilladores EmiTools 22pcs", "quantity": 1 },
+        { "item_id": "caja_herramientas", "name": "Caja de herramientas BCM 13\"", "quantity": 1 },
+        { "item_id": "powerbank_led", "name": "Powerbank + Linterna LED 6000mAh", "quantity": 2 },
+        { "item_id": "bascula_digital", "name": "Báscula digital portátil 0-50kg", "quantity": 2 }
+      ]
+    },
+    {
+      "category_id": "productos_quimicos",
+      "category_name": "Productos químicos",
+      "items": [
+        { "item_id": "animo_biofert", "name": "Animo Biofert 5L", "quantity": 2 }
+      ]
+    }
+  ]
+}
